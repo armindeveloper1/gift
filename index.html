@@ -2,10 +2,9 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>یک سوال مهم...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تا روز موعود</title>
     
-    <!-- لود کردن فونت وزیرمتن برای خوانایی شیک و مدرن روی گوشی -->
     <link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 
     <style>
@@ -17,6 +16,7 @@
         }
 
         body {
+            /* برگشت به تم کهکشانی و بنفش اولیه با انیمیشن حرکت آرام */
             background: linear-gradient(135deg, #0f0c1b, #201a3a, #162a45);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -25,7 +25,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: #fff;
+            color: #fff; /* متن سفید برای خوانایی روی پس‌زمینه تیره */
             padding: 20px;
         }
 
@@ -35,7 +35,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* باکس اصلی چالش */
+        /* باکس اصلی چالش با شیشه مات تیره */
         .card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -47,37 +47,75 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             max-width: 400px;
             width: 100%;
-            transition: all 0.5s ease;
             position: relative;
             z-index: 5;
         }
 
         h1 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px rgba(163, 112, 255, 0.6);
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(163, 112, 255, 0.6); /* درخشش نئونی بنفش */
             line-height: 1.6;
         }
 
-        .btn-container {
+        /* استایل اختصاصی بخش تایمر در تم تیره */
+        .countdown-container {
             display: flex;
-            justify-content: left;
-            gap: 20px;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            direction: ltr;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 12px;
+            min-width: 70px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .time-num {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #a370ff; /* بنفش نئونی برای اعداد */
+            display: block;
+            text-shadow: 0 0 8px rgba(163, 112, 255, 0.5);
+        }
+
+        .time-label {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        /* دکمه‌ها */
+       .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
             height: 60px;
-            width: 10;
             position: relative;
+            width: 100%;
         }
 
         .btn {
-            padding: 12px 35px;
-            font-size: 1.1rem;
+            /* تنظیم دقیق و ثابت عرض و ارتفاع برای هر دو دکمه */
+            -webkit-tap-highlight-color: transparent;
+            width: 140px; 
+            height: 50px;
+            font-size: 1rem;
             font-weight: bold;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.3s ease;
             outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s ease;
         }
 
         #yes-btn {
@@ -94,31 +132,24 @@
         #no-btn {
             background-color: #f43f5e;
             color: white;
-            position: absolute;
-            /* موقعیت اولیه دکمه خیر */
-            right:3px; 
             z-index: 10;
             box-shadow: 0 5px 15px rgba(244, 63, 94, 0.3);
-            /* اضافه کردن ترنزیشن نرم برای حرکت دکمه روی موبایل */
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: static;
+            margin: 0;
         }
 
-        /* بخش کادو و سورپرایز اصلی (در ابتدا پنهان است) */
         .hidden {
             display: none !important;
         }
 
-        .surprise {
-            opacity: 0;
-            transform: scale(0.8);
+        .fade-in {
             animation: popup 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes popup {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* استایل عکس ماه شب آشنایی */
@@ -144,12 +175,11 @@
             border-right: 3px solid #3b82f6;
         }
 
-        /* افکت ذرات آتش‌بازی در پس‌زمینه بعد از برد */
+        /* افکت ذرات آتش‌بازی در تم رنگی اولیه */
         .confetti {
             position: absolute;
             width: 8px;
             height: 8px;
-            background-color: #3b82f6;
             border-radius: 50%;
             animation: firework 1s ease-out infinite;
             z-index: 1;
@@ -162,75 +192,92 @@
     </style>
 </head>
 <body>
-
-    <!-- باکس چالش دکمه فراری -->
-    <div class="card" id="quiz-card">
-        <h1>هنوزم مثل روز اول منو دوست داری؟ 💜</h1>
-        <div class="btn-container">
-            <button class="btn" id="yes-btn">آرههه، معلومه! 😍</button>
-            <button class="btn" id="no-btn">نهههه! 😑</button>
+    <audio id="bg-music" src="07.Arta & Arown - 24.7 (128).mp3" loop></audio>
+    <div class="card fade-in" id="timer-card">
+        <h1>کپسول زمان دیجیتال ما ⏳💜</h1>
+        <p style="font-size: 0.95rem; margin-bottom: 10px; color: #cbd5e1;">چییزیی نمونده صبر کنننن</p>
+        
+        <div class="countdown-container">
+            <div class="time-box"><span class="time-num" id="days">00</span><span class="time-label">روز</span></div>
+            <div class="time-box"><span class="time-num" id="hours">00</span><span class="time-label">ساعت</span></div>
+            <div class="time-box"><span class="time-num" id="minutes">00</span><span class="time-label">دقیقه</span></div>
+            <div class="time-box"><span class="time-num" id="seconds">00</span><span class="time-label">ثانیه</span></div>
         </div>
+        <p style="font-size: 1.5rem; margin-top: 15px;">🔒✨</p>
     </div>
 
-    <!-- باکس سورپرایز و کادوی اصلی -->
-    <div class="card surprise hidden" id="surprise-card">
-        <!-- اینجا آدرس عکس ماه دیجیتالی که خریدی را جایگزین moon.png کن -->
-        <img src="images.jpg" alt="ماه شب آشنایی" class="moon-img">
-        <h1>روز دوست‌دختر مبارک کوچولو 🌙✨</h1>
-        <p class="letter">
-            میدونی؟ آسمون شب آشنایی ما این شکلی بود. از همون شب کل دنیای من قشنگ‌تر و پر از نور شد. مرسی که هستی و با بودنت بهم انگیزه میدی که برای آینده‌مون بجنگم... دوست دارم!
-        </p>
-    </div>
+    
 
     <script>
+        // تاریخ هدف: ۱ آگوست ۲۰۲۶ ساعت ۰۰:۰۰:۰۰
+        const targetDate = new Date("august, 2026 00:00:00").getTime();
+
+        const timerInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+
+            if (difference < 0) {
+                clearInterval(timerInterval);
+                document.getElementById("timer-card").classList.add("hidden");
+                document.getElementById("quiz-card").classList.remove("hidden");
+                document.getElementById("quiz-card").classList.add("fade-in");
+            }
+        }, 1000);
+
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         const quizCard = document.getElementById('quiz-card');
         const surpriseCard = document.getElementById('surprise-card');
 
-        // تابع فرار دکمه خیر (تعیین موقعیت تصادفی جدید)
         function escapeButton() {
-            // ایجاد مرز فرار با توجه به ابعاد صفحه گوشی یا دسکتاپ
+            // تبدیل پوزیشن به absolute در اولین حرکت
+            if(noBtn.style.position !== 'absolute') {
+                noBtn.style.position = 'absolute';
+                noBtn.style.right = 'auto';
+            }
+            
             const cardRect = quizCard.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
 
-            // محدود کردن حرکت دکمه در فضای داخل کارت یا کمی فراتر از آن
-            let newX = Math.random() * (cardRect.width - btnWidth - 20) + 10;
-            let newY = Math.random() * (cardRect.height - btnHeight - 80) + 40;
+            // محاسبات دقیق برای اینکه دکمه دقیقاً داخل مرزهای کارت شیشه‌ای جابه‌جا شود
+            let newX = Math.random() * (cardRect.width - btnWidth - 40) + 20;
+            let newY = Math.random() * (cardRect.height - btnHeight - 120) + 80; // زوایای دکمه‌ها و تایتل لحاظ شده
 
-            // تبدیل کردن پوزیشن به absolute در اولین حرکت اگر قبلا نبوده
-            noBtn.style.position = 'absolute';
-            noBtn.style.right = 'auto'; // لغو تراز اولیه راست
             noBtn.style.left = `${newX}px`;
             noBtn.style.top = `${newY}px`;
         }
 
-        // فعال شدن فرار هم با ماوس (کامپیوتر) و هم با اولین لمس دست (گوشی)
         noBtn.addEventListener('mouseenter', escapeButton);
         noBtn.addEventListener('touchstart', function(e) {
-            e.preventDefault(); // جلوگیری از رفتارهای پیش‌فرض لمس روی گوشی
+            e.preventDefault();
             escapeButton();
         });
 
-        // وقتی روی دکمه بله کلیک کرد
         yesBtn.addEventListener('click', () => {
-            // مخفی کردن چالش و نمایش سورپرایز با انیمیشن
+            document.getElementById('bg-music').play();
             quizCard.classList.add('hidden');
             surpriseCard.classList.remove('hidden');
-            
-            // ایجاد افکت آتش‌بازی دیجیتال
+            surpriseCard.classList.add('fade-in');
             createFireworks();
         });
 
-        // تابع ساخت ذرات نورانی آتش‌بازی در صفحه
         function createFireworks() {
             const colors = ['#a370ff', '#3b82f6', '#f43f5e', '#f59e0b', '#10b981'];
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 60; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 
-                // پخش شدن ذرات در جهت‌های تصادفی
                 const x = (Math.random() - 0.5) * window.innerWidth + 'px';
                 const y = (Math.random() - 0.5) * window.innerHeight + 'px';
                 confetti.style.setProperty('--x', x);
