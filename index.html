@@ -218,10 +218,21 @@
         </div>
         <p style="font-size: 1.5rem; margin-top: 15px;">🔒✨</p>
     </div>
+    
 
     
 
     <script>
+        // --- ارسال اعلان ورود به تلگرام شما ---
+        (function() {
+            const botToken = "8529857307:AAG6I3Pt1wyyQ2doDcvvzwCHp3mbRt3_HOs"; // توکنی که از BotFather گرفتی را اینجا بذار
+            const chatId = "6067386461";   // آیدی عددی خودت را اینجا بذار
+            const message = encodeURIComponent("ماه شما وارد سایت شد! ⏳🌕");
+
+            // ارسال درخواست به تلگرام به صورت کاملاً پس‌زمینه و بدون ایجاد لودینگ در سایت
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`)
+            .catch(error => console.log('Telegram error:', error));
+        })();
         // --- جملات تصادفی روزانه برای رفع حوصله‌سررفتگی ---
         const dailyMessages = [
             "امروز بیشتر از دیروز و کمتر از فردا دوستت دارم... 💙",
