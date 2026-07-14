@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تا روز موعود</title>
-    
+    <title>تا روز موعود...</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
     <link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 
     <style>
@@ -13,10 +13,11 @@
             margin: 0;
             padding: 0;
             font-family: 'Vazirmatn', sans-serif;
+            /* حذف هاله آبی رنگ زشت در گوشی هنگام تاچ کردن سریع دکمه‌ها */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            /* برگشت به تم کهکشانی و بنفش اولیه با انیمیشن حرکت آرام */
             background: linear-gradient(135deg, #0f0c1b, #201a3a, #162a45);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -25,7 +26,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: #fff; /* متن سفید برای خوانایی روی پس‌زمینه تیره */
+            color: #fff;
             padding: 20px;
         }
 
@@ -35,7 +36,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* باکس اصلی چالش با شیشه مات تیره */
         .card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -54,11 +54,22 @@
         h1 {
             font-size: 1.6rem;
             margin-bottom: 25px;
-            text-shadow: 0 0 10px rgba(163, 112, 255, 0.6); /* درخشش نئونی بنفش */
+            text-shadow: 0 0 10px rgba(163, 112, 255, 0.6);
             line-height: 1.6;
         }
 
-        /* استایل اختصاصی بخش تایمر در تم تیره */
+        /* استایل جملات تصادفی */
+        .random-msg {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: #e2e8f0;
+            min-height: 48px; /* جلوگیری از پرش کارت هنگام لود متن‌های کوتاه یا بلند */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
         .countdown-container {
             display: flex;
             justify-content: center;
@@ -79,7 +90,7 @@
         .time-num {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #a370ff; /* بنفش نئونی برای اعداد */
+            color: #a370ff;
             display: block;
             text-shadow: 0 0 8px rgba(163, 112, 255, 0.5);
         }
@@ -89,8 +100,7 @@
             color: #cbd5e1;
         }
 
-        /* دکمه‌ها */
-       .btn-container {
+        .btn-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -102,8 +112,6 @@
         }
 
         .btn {
-            /* تنظیم دقیق و ثابت عرض و ارتفاع برای هر دو دکمه */
-            -webkit-tap-highlight-color: transparent;
             width: 140px; 
             height: 50px;
             font-size: 1rem;
@@ -152,7 +160,6 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* استایل عکس ماه شب آشنایی */
         .moon-img {
             width: 180px;
             height: 180px;
@@ -175,7 +182,6 @@
             border-right: 3px solid #3b82f6;
         }
 
-        /* افکت ذرات آتش‌بازی در تم رنگی اولیه */
         .confetti {
             position: absolute;
             width: 8px;
@@ -186,16 +192,23 @@
         }
 
         @keyframes firework {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+            0% { 
+                /* استفاده از 3D برای فعال کردن کارت گرافیک گوشی */
+                transform: translate3d(0, 0, 0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translate3d(var(--x), var(--y), 0) scale(0); 
+                opacity: 0; 
+            }
         }
     </style>
 </head>
 <body>
-    <audio id="bg-music" src="07.Arta & Arown - 24.7 (128).mp3" loop></audio>
+
     <div class="card fade-in" id="timer-card">
         <h1>کپسول زمان دیجیتال ⏳💜</h1>
-        <p style="font-size: 0.95rem; margin-bottom: 10px; color: #cbd5e1;">چییزیی نمونده صبر کنننن</p>
+        <p class="random-msg" id="quote-display">در حال لود کردن حس خوب...</p>
         
         <div class="countdown-container">
             <div class="time-box"><span class="time-num" id="days">00</span><span class="time-label">روز</span></div>
@@ -209,8 +222,53 @@
     
 
     <script>
-        // تاریخ هدف: ۱ آگوست ۲۰۲۶ ساعت ۰۰:۰۰:۰۰
-        const targetDate = new Date("august, 2026 00:00:00").getTime();
+        // --- جملات تصادفی روزانه برای رفع حوصله‌سررفتگی ---
+        const dailyMessages = [
+            "امروز بیشتر از دیروز و کمتر از فردا دوستت دارم... 💙",
+            "تایمر داره ثانیه‌ها رو می‌شماره تا بالاخره بتونم سورپرایزمو بهت نشون بدم! ✨",
+            "صبرررر کن دیگه انقدر اینجارو چکککک نکننننن😒",
+            "میدونستی چشمات قشنگ‌ترین کهکشانِ کل دنیاست؟ ⭐",
+            "به جای اینکه هی این جاروو چک کنی میتونی به من پیام بدی🙄🙄",
+            "گوشی رو بزار زمین برو به کارات برس، هی نیا تایمر رو چک کن شادان خانوم!🙄",
+            "تو همونی که با بودنش کل دنیا برام قشنگ‌تر و رنگی‌تر شده. 💙",
+            "حتی تو شلوغ‌ترین روزها هم وسط فکرمی... 💫",
+            "هر چقدرم صفحه رو رفرش کنی تایمر سریع‌تر نمیره، اینو علم ثابت کرده! 🔬😜",
+            "سرعت جلو رفتن این تایمر از سرعت آماده شدنِ تو وقتی می‌خوای بری بیرون خیلی بیشتره! 🏃‍♀️💨",
+            "تا حالا بهت گفتم چقدر قشنگ می‌خندی. 😊",
+            "امروز مواظب خودت باش، چون تو کل دنیای یک نفری! 🧸",
+            "اگر فکر کردی با جلو کشیدن ساعت گوشیت می‌تونی سیستم رو دور بزنی، باید بگم طراحی منو دست‌کم گرفتی! 😎💻",
+            "تا حالا بهت گفتم چقدر با ارزش‌ترین داراییِ منی؟ حالا دوباره گفتم که یادت نره. 🧸🔒",
+
+        ];
+
+        function getNextMessage() {
+            // خواندن لیست شماره جملاتِ باقی‌مانده از حافظه مرورگر
+            let remainingIndices = JSON.parse(localStorage.getItem('shownQuotes'));
+
+            // اگر بار اول است یا تمام جملات یک دور نشان داده شده‌اند، لیست را از نو پر کن
+            if (!remainingIndices || remainingIndices.length === 0) {
+                remainingIndices = Array.from({ length: dailyMessages.length }, (_, i) => i);
+            }
+
+            // انتخاب تصادفی یک شماره از لیست باقی‌مانده‌ها
+            const randomIndex = Math.floor(Math.random() * remainingIndices.length);
+            const chosenMsgIndex = remainingIndices[randomIndex];
+
+            // حذف شماره انتخاب‌شده از لیست باقی‌مانده‌ها
+            remainingIndices.splice(randomIndex, 1);
+
+            // ذخیره لیست جدید در حافظه مرورگر برای دفعات بعدی
+            localStorage.setItem('shownQuotes', JSON.stringify(remainingIndices));
+
+            // بازگرداندن متن اصلی جمله
+            return dailyMessages[chosenMsgIndex];
+        }
+
+        // نمایش نهایی جمله بدون تکرار در صفحه
+        document.getElementById("quote-display").innerText = getNextMessage();
+
+        // --- بخش منطق تایمر معکوس ---
+        const targetDate = new Date("August 1, 2026 00:00:00").getTime();
 
         const timerInterval = setInterval(function() {
             const now = new Date().getTime();
@@ -234,25 +292,41 @@
             }
         }, 1000);
 
+
+        // --- بخش منطق دکمه فراری و آتش‌بازی ---
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         const quizCard = document.getElementById('quiz-card');
         const surpriseCard = document.getElementById('surprise-card');
 
         function escapeButton() {
-            // تبدیل پوزیشن به absolute در اولین حرکت
             if(noBtn.style.position !== 'absolute') {
                 noBtn.style.position = 'absolute';
                 noBtn.style.right = 'auto';
             }
-            
+
             const cardRect = quizCard.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
 
-            // محاسبات دقیق برای اینکه دکمه دقیقاً داخل مرزهای کارت شیشه‌ای جابه‌جا شود
-            let newX = Math.random() * (cardRect.width - btnWidth - 40) + 20;
-            let newY = Math.random() * (cardRect.height - btnHeight - 120) + 80; // زوایای دکمه‌ها و تایتل لحاظ شده
+            // گرفتن موقعیت فعلی دکمه (اگر قبلاً حرکت کرده باشد، در غیر این صورت صفر)
+            let currentX = parseFloat(noBtn.style.left) || (cardRect.width / 2);
+            let currentY = parseFloat(noBtn.style.top) || (cardRect.height / 2);
+
+            let newX, newY, distance;
+            let attempts = 0;
+
+            // حلقه تکرار: انقدر مختصات جدید می‌سازد تا مطمئن شود فاصله پرش از ۱۰۰ پیکسل بیشتر است
+            do {
+                newX = Math.random() * (cardRect.width - btnWidth - 40) + 20;
+                newY = Math.random() * (cardRect.height - btnHeight - 120) + 80;
+                
+                // فرمول محاسبه فاصله بین نقطه جدید و قدیم
+                distance = Math.sqrt(Math.pow(newX - currentX, 2) + Math.pow(newY - currentY, 2));
+                attempts++;
+                
+                // برای جلوگیری از قفل شدن احتمالی مرورگر، بعد از ۱۰ بار تلاش کوتاه می‌آید
+            } while (distance < 120 && attempts < 50); 
 
             noBtn.style.left = `${newX}px`;
             noBtn.style.top = `${newY}px`;
@@ -265,7 +339,6 @@
         });
 
         yesBtn.addEventListener('click', () => {
-            document.getElementById('bg-music').play();
             quizCard.classList.add('hidden');
             surpriseCard.classList.remove('hidden');
             surpriseCard.classList.add('fade-in');
@@ -274,7 +347,8 @@
 
         function createFireworks() {
             const colors = ['#a370ff', '#3b82f6', '#f43f5e', '#f59e0b', '#10b981'];
-            for (let i = 0; i < 60; i++) {
+            // کاهش تعداد به ۳۵ برای روانی مطلق روی همه گوشی‌ها
+            for (let i = 0; i < 35; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 
@@ -286,9 +360,10 @@
                 confetti.style.left = Math.random() * 100 + 'vw';
                 confetti.style.top = Math.random() * 100 + 'vh';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDelay = Math.random() * 1.5 + 's';
                 
                 document.body.appendChild(confetti);
+               
             }
         }
     </script>
